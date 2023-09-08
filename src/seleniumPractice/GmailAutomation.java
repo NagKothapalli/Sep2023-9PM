@@ -1,5 +1,7 @@
 package seleniumPractice;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -61,7 +63,9 @@ public class GmailAutomation
 		nameElement.sendKeys("sdsdsdsdfsfsdfsd");
 		nameElement.clear();
 		nameElement.sendKeys("nag022@gmail.com");	
-		
+		List<WebElement> elements = driver.findElements(By.className("VfPpkd-vQzf8d"));
+		WebElement element = elements.get(1); // 0 1 2
+		element.click();
 	}
 	
 	
