@@ -52,6 +52,7 @@ public class GmailAutomation
 	@Test
 	public void loginToApplication()
 	{
+		System.out.println("Test Case : Login To Application");
 		name = "Ram";
 		System.out.println(name);
 		By nameObj = By.name("identifier");
