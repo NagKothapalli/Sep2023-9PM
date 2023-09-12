@@ -63,11 +63,42 @@ public class GmailAutomation
 		nameElement.sendKeys("sdsdsdsdfsfsdfsd");
 		nameElement.clear();
 		nameElement.sendKeys("nag022@gmail.com");	
+		nameElement.clear();
+		driver.findElement(By.id("identifierId")).sendKeys("ravi@abc.com");
 		List<WebElement> elements = driver.findElements(By.className("VfPpkd-vQzf8d"));
 		WebElement element = elements.get(1); // 0 1 2
 		element.click();
 	}
-	
+	@Test
+	public void createAccount()
+	{
+		List<WebElement> elements = driver.findElements(By.className("VfPpkd-vQzf8d"));
+		int cnt = elements.size();
+		for(int i=0;i<cnt;i++) // i= 0 
+		{
+			WebElement element = elements.get(i);
+			String text = element.getText();
+			if(text.trim().equals("Create account")) {
+				element.click();
+				break;
+			}
+		}
+				
+	}
+	//Selectors / Locators : ID , Name , Class , cssSelector , tagname , linkText , partialLinkText , xpath
+	@Test
+	public void learnMore()
+	{
+		//driver.findElement(By.tagName("a")).click();
+		//driver.findElement(By.linkText("Learn more")).click();
+		driver.findElement(By.partialLinkText("Learn")).click();
+		/*
+		 * List<WebElement> elements = driver.findElements(By.tagName("a")); int cnt =
+		 * elements.size(); for(int i=0;i<cnt;i++) // i= 0 { WebElement element =
+		 * elements.get(i); String text = element.getText();
+		 * if(text.trim().equals("Learn more")) { element.click(); break; } }
+		 */
+	}
 	
 	
 	
