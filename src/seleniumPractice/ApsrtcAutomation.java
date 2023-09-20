@@ -1,7 +1,11 @@
 package seleniumPractice;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Set;
 
 import org.junit.Before;
@@ -9,6 +13,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
@@ -17,6 +22,7 @@ public class ApsrtcAutomation
 	String expectedTitle = "Gmail";
 	String name; //null
 	WebDriver driver ; //null
+	Actions actions;//null
 	public ApsrtcAutomation()
 	{
 		/*
@@ -25,6 +31,7 @@ public class ApsrtcAutomation
 		 */
 		System.setProperty("webdriver.chrome.driver", "D:\\Softwares\\JarFiles\\chromedriver-win64-116\\chromedriver-win64\\chromedriver.exe");
 		driver = new ChromeDriver(); //1234
+		actions = new Actions(driver);
 	}
 	
 	@Before
@@ -33,13 +40,25 @@ public class ApsrtcAutomation
 		System.out.println("Test Case : Launch Application");//logger
 		driver.get("https://www.apsrtconline.in/"); //null.get()
 	}
+	
+	@Test
+	public void readTestData() throws IOException
+	{
+		FileInputStream myfile = new FileInputStream("D:\\WorkSpace\\Java\\Sep2023-9PM\\TestData\\MyTestData.properties");
+		Properties prop = new Properties();
+		prop.load(myfile);
+		String url = prop.getProperty("URL");
+		System.out.println(url);
+		System.out.println(prop.getProperty("UserName"));
+		System.out.println(prop.getProperty("JDate"));
+	}
 	//To perform keyboard and mouse events we have actions class in selenium webdriver
 	@Test
 	public void bookBusTicket()
 	{
 		System.out.println("Test Case : Book Bus Ticket");
 		driver.findElement(By.xpath("//input[@name='source']")).sendKeys("HYDERABAD");
-		Actions actions = new Actions(driver);//1234
+		//Actions actions = new Actions(driver);//1234
 		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
 		driver.findElement(By.xpath("//input[@name='destination']")).sendKeys("GUNTUR");
 		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();		
@@ -66,8 +85,20 @@ public class ApsrtcAutomation
 		driver.findElement(By.xpath("//input[@name='searchBtn']")).click();
 		driver.switchTo().alert().accept();
 		driver.findElement(By.xpath("//input[@name='source']")).sendKeys("HYDERABAD");
-		Actions actions = new Actions(driver);//1234
+		//Actions actions = new Actions(driver);//1234
 		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+	}
+	@Test
+	public void mouseEvents()
+	{
+		WebElement source = driver.findElement(By.xpath("//input[@name='source']"));
+		//actions.moveToElement(source).build().perform();
+		//actions.moveToElement(source).click().build().perform();
+		//actions.moveToElement(source).sendKeys("HYDERABAD").build().perform();
+		//actions.moveToElement(source).doubleClick().build().perform();
+		//actions.moveToElement(source).contextClick().build().perform();
+		actions.moveToElement(source).click().sendKeys("HYDERABAD").doubleClick().contextClick().build().perform();
+		//actions.dragAndDrop(source, source).build().perform();
 	}
 	@Test
 	public void handleMultipleWindows() throws InterruptedException
