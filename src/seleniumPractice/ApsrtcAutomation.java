@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ApsrtcAutomation 
 {
@@ -23,6 +26,7 @@ public class ApsrtcAutomation
 	String name; //null
 	WebDriver driver ; //null
 	Actions actions;//null
+	ReadPropertiesUtility readPropertiesUtility;
 	public ApsrtcAutomation()
 	{
 		/*
@@ -32,14 +36,19 @@ public class ApsrtcAutomation
 		System.setProperty("webdriver.chrome.driver", "D:\\Softwares\\JarFiles\\chromedriver-win64-116\\chromedriver-win64\\chromedriver.exe");
 		driver = new ChromeDriver(); //1234
 		actions = new Actions(driver);
+		readPropertiesUtility = new ReadPropertiesUtility("D:\\WorkSpace\\Java\\Sep2023-9PM\\TestData\\Apsrtc.properties");
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); //dynamic wait
 	}
 	
 	@Before
-	public void launchApplication()
+	public void launchApplication() throws IOException
 	{
-		System.out.println("Test Case : Launch Application");//logger
-		driver.get("https://www.apsrtconline.in/"); //null.get()
+		System.out.println("Test Case : Launch Application");//logger		
+		//driver.get("https://www.apsrtconline.in/"); //null.get()
+		driver.get(readPropertiesUtility.getData("URL"));
 	}
+	
+	
 	
 	@Test
 	public void readTestData() throws IOException
@@ -54,20 +63,46 @@ public class ApsrtcAutomation
 	}
 	//To perform keyboard and mouse events we have actions class in selenium webdriver
 	@Test
-	public void bookBusTicket()
+	public void bookBusTicket() throws IOException, InterruptedException
 	{
+		//Thread.sleep(30000);  //fixed wait / blind wait
+		//driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); //dynamic wait
+		//Explicit wait
+		WebElement sourceCity = driver.findElement(By.xpath("//input[@name='source']"));
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+		wait.until(ExpectedConditions.elementToBeClickable(sourceCity)).click();
+		wait.until(ExpectedConditions.elementToBeClickable(sourceCity)).sendKeys("HYDERABAD");
 		System.out.println("Test Case : Book Bus Ticket");
-		driver.findElement(By.xpath("//input[@name='source']")).sendKeys("HYDERABAD");
+		//driver.findElement(By.xpath("//input[@name='source']")).sendKeys("HYDERABAD");
+		//driver.findElement(By.xpath("//input[@name='source']")).sendKeys(readPropertiesUtility.getData("FromCity"));		
 		//Actions actions = new Actions(driver);//1234
 		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
-		driver.findElement(By.xpath("//input[@name='destination']")).sendKeys("GUNTUR");
+		driver.findElement(By.xpath("//input[@name='destination']")).sendKeys(readPropertiesUtility.getData("ToCity"));
 		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();		
 		driver.findElement(By.xpath("//input[@name='searchBtn']")).click();
-		selectJDate("26"); //we can read this value from a input file 
+		selectJDate(readPropertiesUtility.getData("JDate")); //we can read this value from a input file 
 		//driver.findElement(By.xpath("//a[text()='22']")).click(); //Date Hard coded
 		driver.findElement(By.xpath("//input[@name='searchBtn']")).click();
 	}
+	@Test
+	public void bookBusTicketNew() throws IOException, InterruptedException
+	{
+		getElement("//input[@name='source']").sendKeys(readPropertiesUtility.getData("FromCity"));
+		System.out.println("Test Case : Book Bus Ticket");
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		getElement("//input[@name='destination']").sendKeys(readPropertiesUtility.getData("ToCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();		
+		getElement("//input[@name='searchBtn']").click();
+		selectJDate(readPropertiesUtility.getData("JDate")); 
+		getElement("//input[@name='searchBtn']").click();
+	}
 	
+	public WebElement getElement(String myxpath)
+	{
+		WebElement sourceCity = driver.findElement(By.xpath(myxpath));
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+		return wait.until(ExpectedConditions.elementToBeClickable(sourceCity));
+	}
 	public void selectJDate(String jDate)
 	{
 		//passing some string value dynamically in to the xpath in run time is called dynamic xpath

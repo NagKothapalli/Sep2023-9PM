@@ -1,5 +1,6 @@
 package seleniumPractice;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Before;
@@ -16,21 +17,22 @@ public class GmailAutomation
 	String expectedTitle = "Gmail";
 	String name; //null
 	WebDriver driver ; //null
+	ReadPropertiesUtility readPropertiesUtility;
 	public GmailAutomation()
 	{
 		System.setProperty("webdriver.chrome.driver", "D:\\Softwares\\JarFiles\\chromedriver-win64-116\\chromedriver-win64\\chromedriver.exe");
 		driver = new ChromeDriver(); //1234
+		readPropertiesUtility = new ReadPropertiesUtility("D:\\WorkSpace\\Java\\Sep2023-9PM\\TestData\\Gmail.properties");
 	}
 	@Before
-	public void launchApplication()
+	public void launchApplication() throws IOException
 	{
 		System.out.println("Welcome to Selenium Automation");
 		//Constructor of chromedriver will open an empty google chrome browser
 		//ChromeDriver driver = new ChromeDriver();
 		name  = "Ravi"; // local variable 
-		System.out.println(name);
-		
-		driver.get("https://gmail.com");	//1234	
+		System.out.println(name);		
+		driver.get(readPropertiesUtility.getData("URL"));	//1234	
 		String sessionID = driver.getWindowHandle();
 		System.out.println("My Current SessionID :" + sessionID);
 		String actualTitle = driver.getTitle();

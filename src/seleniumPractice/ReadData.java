@@ -11,7 +11,7 @@ public class ReadData {
 		FileInputStream myfile = new FileInputStream("D:\\WorkSpace\\Java\\Sep2023-9PM\\TestData\\MyTestData.properties");
 		Properties prop = new Properties();
 		prop.load(myfile);
-		String value = prop.getProperty(key);
+		String value = prop.getProperty(key); // a=a1 , b=b1 , c=c1
 		return value;
 	}
 
