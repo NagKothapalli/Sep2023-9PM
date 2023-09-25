@@ -62,6 +62,91 @@ public class ApsrtcAutomation
 		System.out.println(prop.getProperty("JDate"));
 	}
 	//To perform keyboard and mouse events we have actions class in selenium webdriver
+	@Test   // Here Data is hard coded
+	public void bookBusTicket_1() throws IOException, InterruptedException
+	{		
+		driver.findElement(By.xpath("//input[@name='source']")).sendKeys("HYDERABAD");
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		driver.findElement(By.xpath("//input[@name='destination']")).sendKeys("GUNTUR");
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		driver.findElement(By.xpath("//input[@value='Depart On']")).click();
+		driver.findElement(By.xpath("//a[text()='28']")).click();
+		driver.findElement(By.xpath("//input[@name='searchBtn']")).click();		
+	}
+	//687687 ,  hkhkj , jhkjhkhj
+	@Test // Here reading the data dynamically from a data source
+	public void bookBusTicket_2() throws IOException, InterruptedException
+	{		
+		driver.findElement(By.xpath("//input[@name='source']")).sendKeys(readPropertiesUtility.getData("FromCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		driver.findElement(By.xpath("//input[@name='destination']")).sendKeys(readPropertiesUtility.getData("ToCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		driver.findElement(By.xpath("//input[@value='Depart On']")).click();
+		String jd = readPropertiesUtility.getData("JDate");
+		driver.findElement(By.xpath("//a[text()='"+jd+"']")).click();
+		driver.findElement(By.xpath("//input[@name='searchBtn']")).click();		
+	}
+	
+	@Test // Here reading the data dynamically from a data source
+	public void bookBusTicket_3() throws IOException, InterruptedException
+	{		
+		findElement("//input[@name='source']").sendKeys(readPropertiesUtility.getData("FromCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		findElement("//input[@name='destination']").sendKeys(readPropertiesUtility.getData("ToCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		findElement("//input[@value='Depart On']").click();
+		String jd = readPropertiesUtility.getData("JDate");
+		findElement("//a[text()='"+jd+"']").click();
+		findElement("//input[@name='searchBtn']").click();	
+	}
+	@Test // Here reading the data dynamically from a data source
+	public void bookBusTicket_4() throws IOException, InterruptedException
+	{		
+		getElement("//input[@name='source']").sendKeys(readPropertiesUtility.getData("FromCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		getElement("//input[@name='destination']").sendKeys(readPropertiesUtility.getData("ToCity"));
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+		getElement("//input[@value='Depart On']").click();
+		String jd = readPropertiesUtility.getData("JDate");
+		getElement("//a[text()='"+jd+"']").click();
+		getElement("//input[@name='searchBtn']").click();	
+	}
+	
+	String sourceXpath = "//input[@name='source']";
+	String destinationXpath = "//input[@name='destination']";
+	String openCalXpath = "//input[@value='Depart On']";
+	String searchXpath = "//input[@name='searchBtn']";
+	
+	@Test // Here reading the data dynamically from a data source
+	public void bookBusTicket_5() throws IOException, InterruptedException
+	{		
+		getElement(sourceXpath).sendKeys(readPropertiesUtility.getData("FromCity"));
+		clickEnter();
+		getElement(destinationXpath).sendKeys(readPropertiesUtility.getData("ToCity"));
+		clickEnter();
+		getElement(openCalXpath).click();
+		String jd = readPropertiesUtility.getData("JDate");
+		getElement("//a[text()='"+jd+"']").click();
+		getElement(searchXpath).click();	
+	}
+	
+	public void clickEnter()
+	{
+		actions.pause(Duration.ofSeconds(1)).sendKeys(Keys.ENTER).build().perform();
+	}
+	public WebElement findElement(String myxpath)
+	{
+		//WebElement sourceCity = driver.findElement(By.xpath(myxpath));
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+		return wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(myxpath))));
+	}
+
+	public WebElement getElement(String myxpath) //utility function
+	{
+		//WebElement sourceCity = driver.findElement(By.xpath(myxpath));
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+		return wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.xpath(myxpath))));
+	}
 	@Test
 	public void bookBusTicket() throws IOException, InterruptedException
 	{
@@ -97,12 +182,7 @@ public class ApsrtcAutomation
 		getElement("//input[@name='searchBtn']").click();
 	}
 	
-	public WebElement getElement(String myxpath)
-	{
-		WebElement sourceCity = driver.findElement(By.xpath(myxpath));
-		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
-		return wait.until(ExpectedConditions.elementToBeClickable(sourceCity));
-	}
+	
 	public void selectJDate(String jDate)
 	{
 		//passing some string value dynamically in to the xpath in run time is called dynamic xpath
